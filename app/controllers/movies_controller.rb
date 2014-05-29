@@ -3,15 +3,16 @@ class MoviesController < ApplicationController
     @sorted = {}
     @checked_boxes = []
     @all_ratings = Movie.ratings
-    
+
     if params[:ratings]
-      @checked_boxes = session[:ratings] = params[:ratings].keys
+      session[:ratings] =params[:ratings]
+      @checked_boxes = params[:ratings].keys
     elsif session[:ratings]
-      @checked_boxes = session[:ratings]
+      @checked_boxes = session[:ratings].keys
     else
       @checked_boxes = @all_ratings
     end
-    
+
     if params.has_key?(:sort_by)
       sort_by = session[:sort_by] = params[:sort_by]
     elsif session[:sort_by]
@@ -21,9 +22,9 @@ class MoviesController < ApplicationController
     else
       sort_by = "id"
     end
-    
+
     @sorted[sort_by] = "hilite"
-    
+
     @movies = Movie.where(rating: @checked_boxes).order(sort_by)
   end
 
