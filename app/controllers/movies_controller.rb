@@ -1,7 +1,6 @@
 class MoviesController < ApplicationController
   def index
     @sorted = {}
-    @checked_boxes = []
     @all_ratings = Movie.ratings
     needs_to_redirect = false
     redirect_params = {}
