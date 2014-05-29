@@ -1,13 +1,23 @@
 class MoviesController < ApplicationController
   def index
     @sorted = {}
+    @checked_boxes = []
+    @all_ratings = Movie.ratings
+    
+    if params[:ratings]
+      @checked_boxes = params[:ratings].keys
+    else
+      @checked_boxes = @all_ratings
+    end
+    
     if params.has_key?(:sort_by)
       sort_by = params[:sort_by]
       @sorted[sort_by] = "hilite"
     else
       sort_by = "id"
     end
-    @movies = Movie.order(sort_by)
+    
+    @movies = Movie.where(rating: @checked_boxes).order(sort_by)
   end
 
   def show
