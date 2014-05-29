@@ -5,17 +5,24 @@ class MoviesController < ApplicationController
     @all_ratings = Movie.ratings
     
     if params[:ratings]
-      @checked_boxes = params[:ratings].keys
+      @checked_boxes = session[:ratings] = params[:ratings].keys
+    elsif session[:ratings]
+      @checked_boxes = session[:ratings]
     else
       @checked_boxes = @all_ratings
     end
     
     if params.has_key?(:sort_by)
-      sort_by = params[:sort_by]
-      @sorted[sort_by] = "hilite"
+      sort_by = session[:sort_by] = params[:sort_by]
+    elsif session[:sort_by]
+      # sort_by = session[:sort_by]
+      flash.keep
+      redirect_to movies_path(sort_by: session[:sort_by])
     else
       sort_by = "id"
     end
+    
+    @sorted[sort_by] = "hilite"
     
     @movies = Movie.where(rating: @checked_boxes).order(sort_by)
   end
