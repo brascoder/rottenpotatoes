@@ -3,24 +3,31 @@ class MoviesController < ApplicationController
     @sorted = {}
     @checked_boxes = []
     @all_ratings = Movie.ratings
+    needs_to_redirect = false
+    redirect_params = {}
 
-    if params[:ratings]
-      session[:ratings] =params[:ratings]
+    if params.has_key?(:ratings)
+      session[:ratings] = params[:ratings]
       @checked_boxes = params[:ratings].keys
-    elsif session[:ratings]
-      @checked_boxes = session[:ratings].keys
+    elsif !session[:ratings].empty?
+      needs_to_redirect = true
     else
       @checked_boxes = @all_ratings
     end
 
     if params.has_key?(:sort_by)
       sort_by = session[:sort_by] = params[:sort_by]
-    elsif session[:sort_by]
-      # sort_by = session[:sort_by]
-      flash.keep
-      redirect_to movies_path(sort_by: session[:sort_by])
+    elsif !session[:sort_by].empty?
+      needs_to_redirect = true
     else
       sort_by = "id"
+    end
+
+    if needs_to_redirect
+      redirect_params.merge!(ratings: session[:ratings])
+      redirect_params.merge!(sort_by: session[:sort_by])
+      flash.keep
+      redirect_to movies_path(redirect_params)
     end
 
     @sorted[sort_by] = "hilite"
