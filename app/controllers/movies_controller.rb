@@ -8,7 +8,7 @@ class MoviesController < ApplicationController
     if params.has_key?(:ratings)
       session[:ratings] = params[:ratings]
       @checked_boxes = params[:ratings].keys
-    elsif !session[:ratings].empty?
+    elsif session.has_key?(:ratings)
       needs_to_redirect = true
     else
       @checked_boxes = @all_ratings
@@ -16,7 +16,7 @@ class MoviesController < ApplicationController
 
     if params.has_key?(:sort_by)
       sort_by = session[:sort_by] = params[:sort_by]
-    elsif !session[:sort_by].empty?
+    elsif session.has_key?(:sort_by)
       needs_to_redirect = true
     else
       sort_by = "id"
