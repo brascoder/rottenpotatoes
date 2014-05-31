@@ -23,6 +23,11 @@ gem 'haml'
 group :development, :test do
   gem 'sqlite3'
   gem 'debugger'
+  gem 'cucumber-rails'
+  gem 'cucumber-rails-training-wheels'
+  gem 'database_cleaner'
+  gem 'capybara'
+  gem 'launchy'
 end
 
 group :production do
